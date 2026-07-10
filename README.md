@@ -1,62 +1,83 @@
 # Syntax Sprint
 
-A typing-speed game built entirely from real code — snippets pulled live from
-today's top trending GitHub repositories, scored by a syntax-aware engine that
-actually understands brackets, indentation, and structure instead of just
-comparing characters.
+**▶ Live demo — [apps.charliekrug.com/syntax-sprint](https://apps.charliekrug.com/syntax-sprint/)**
+
+[![CI](https://github.com/ctkrug/syntax-sprint/actions/workflows/ci.yml/badge.svg)](https://github.com/ctkrug/syntax-sprint/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+**Type real code. Every bracket counts.**
+
+A typing game for developers. Instead of prose or a fixed word list, Syntax
+Sprint drops you into a real source file from one of today's trending GitHub
+repositories and scores you the way code actually breaks: a mismatched bracket
+or a botched indent is a *structural* mistake, tracked apart from an ordinary
+typo.
 
 ## Why
 
-Typing games (Monkeytype, TypeRacer, and friends) score every character the
-same way, so a botched closing brace costs you as much as a stray space. That's
-fine for prose, but it's the wrong lens for code: a misplaced bracket or a
-dedent that breaks a block is a *real* mistake, and a game about typing code
-should treat it like one. Syntax Sprint tokenizes each snippet before you ever
-touch the keyboard, so scoring can tell the difference between "typo" and
-"syntax error" — and the content itself is never stale, because it's pulled
-from whatever the GitHub community is actually looking at today.
+Typing games like Monkeytype and TypeRacer score every character the same way,
+so a botched closing brace costs you exactly as much as a stray space. That's
+right for prose but wrong for code. A misplaced bracket or a dedent that breaks
+a block isn't a stylistic slip, it's the difference between code that runs and
+code that doesn't. Syntax Sprint tokenizes each snippet before you touch the
+keyboard, so scoring can tell "typo" from "syntax error" and flash the
+structural ones red the instant you type them.
 
-## The wow moment
+And the content is never stale: it comes from whatever the GitHub community is
+starring today, not a canned corpus that's been the same for months.
 
-Load the page and the snippet on screen is from **this morning's #1 trending
-GitHub repo** — not a canned corpus. Start typing: fumble a bracket or blow an
-indentation level and the character flashes red the instant you type it,
-because the scorer is tracking real syntax structure, not just string diffing.
+## What a run looks like
+
+You get a live code card, a stat rail, and a run summary:
+
+```
+  export async function withRetry<T>(
+    task: () => Promise<T>,
+    attempts = 3,
+  ): Promise<T> {
+    ...
+  }
+
+  RUN COMPLETE
+  WPM ................. 74
+  Accuracy ........... 96%
+  Structural mistakes . 1   <- the ")" you fumbled, scored on its own
+  Typos ............... 3
+```
+
+Fumble the `)` and it flashes red and shakes its line right away, and it lands
+in the "structural mistakes" column instead of being lumped in with the typos.
 
 ## Features
 
-- **Live trending content** — today's snippet comes from the GitHub search
-  API's most-starred-recently-created signal (the closest proxy to
-  "trending" GitHub's API exposes), with a bundled offline fallback if the
-  API is unreachable or rate-limited.
-- **Syntax-aware scoring** — a real tokenizer walks each snippet (brackets,
-  indentation, strings, comments) so structural mistakes are scored
-  differently from simple typos, live as you type.
-- **Bracket & indentation penalties** — a mismatched bracket or broken indent
-  flashes red and shakes its line the instant you type it, not just at the
-  end of the run.
-- **WPM & accuracy stats** — a live stat rail (updating at least once a
-  second) plus a run-complete summary with a typo/structural breakdown.
-- **Multi-language snippets** — the tokenizer is structural, not
-  grammar-specific, so TypeScript, Python, Go, Rust, and friends all score
-  correctly; the UI shows which language the current snippet is in.
-- **Synthesized sound + reduced motion** — WebAudio SFX (no audio files) with
-  a persisted mute toggle, and `prefers-reduced-motion` support that drops
-  shake/confetti while keeping color and text feedback.
-
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for how the pieces fit
-together.
+- **Live trending content.** Today's snippet comes from the GitHub search API's
+  most-starred-recently-created signal (the closest proxy to "trending" the API
+  exposes), with a bundled offline fallback when the API is unreachable or rate
+  limited.
+- **Syntax-aware scoring.** A real tokenizer walks each snippet (brackets,
+  indentation, strings, comments) so structural mistakes score differently from
+  simple typos, live as you type.
+- **Bracket and indent penalties.** A mismatched bracket or broken indent
+  flashes red and shakes its line the moment you type it, not just at the end.
+- **WPM and accuracy stats.** A live stat rail that updates at least once a
+  second, plus a run-complete summary with the typo/structural breakdown.
+- **Multi-language.** The tokenizer is structural, not grammar-specific, so
+  TypeScript, Python, Go, Rust, and friends all score correctly; the UI shows
+  the current snippet's language.
+- **Synthesized sound and reduced motion.** WebAudio SFX (no audio files) with a
+  persisted mute toggle, and `prefers-reduced-motion` support that drops the
+  shake and confetti while keeping the color and text feedback.
 
 ## Stack
 
 - **TypeScript + React** for the UI and game logic.
-- **Vite** for dev server and static production builds.
-- **Vitest** for unit tests (tokenizer, scoring engine, GitHub client).
-- **GitHub REST API** for sourcing trending-repo source snippets.
+- **Vite** for the dev server and static production builds.
+- **Vitest** for unit tests (tokenizer, scoring engine, GitHub client, hooks).
+- **GitHub REST API** for sourcing trending-repo snippets.
 
-Ships as a static, self-contained site — no backend required.
+Ships as a static, self-contained site. No backend required.
 
-## Development
+## Run it locally
 
 ```bash
 npm install
@@ -66,9 +87,26 @@ npm run lint      # eslint
 npm run build     # production build to dist/
 ```
 
-See [`docs/VISION.md`](docs/VISION.md) for the product vision and
-[`docs/BACKLOG.md`](docs/BACKLOG.md) for the build plan.
+### Optional: raise the GitHub rate limit
+
+Unauthenticated GitHub API calls are rate limited. To type more snippets in a
+session, copy `.env.example` to `.env` and set a personal access token (no
+scopes needed for public repos):
+
+```
+VITE_GITHUB_TOKEN=ghp_your_token_here
+```
+
+## Documentation
+
+- [`docs/DESIGN.md`](docs/DESIGN.md) covers the visual direction and design tokens.
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) covers how the pieces fit together.
+- [`docs/VISION.md`](docs/VISION.md) covers the product vision.
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+MIT, see [`LICENSE`](LICENSE).
+
+---
+
+More of Charlie's projects at [apps.charliekrug.com](https://apps.charliekrug.com)
