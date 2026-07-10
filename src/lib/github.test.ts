@@ -94,6 +94,24 @@ describe("fetchRepoSnippet", () => {
     });
   });
 
+  it("falls back to \"text\" as the language when GitHub reports none", async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValueOnce(
+        contentsResponse([
+          { name: "index.ts", path: "index.ts", type: "file", download_url: "https://raw/index.ts" },
+        ]),
+      )
+      .mockResolvedValueOnce(rawResponse("export const x = 1;\n"));
+
+    const snippet = await fetchRepoSnippet(
+      { ...REPO, language: null },
+      fetchImpl as unknown as typeof fetch,
+    );
+
+    expect(snippet.language).toBe("text");
+  });
+
   it("skips test files and recurses into a common source directory", async () => {
     const fetchImpl = vi
       .fn()
