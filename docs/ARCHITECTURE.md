@@ -54,7 +54,11 @@ App mount
   state) as the source of truth for `typed` so keystrokes arriving before a
   re-render (batched updates, OS key-repeat) don't race on a stale closure.
 - **`src/hooks/useKeyboardCapture.ts`** — routes raw `keydown` events to
-  `typeChar`/`backspace`, ignoring modifier combos.
+  `typeChar`/`backspace`, ignoring modifier combos. Tab is only hijacked into
+  a literal `"\t"` char when App's `interceptTab` says the next expected
+  character actually is one (tab-indented snippets); otherwise Tab is left
+  alone so it keeps navigating focus to the mute/new-snippet/source-link
+  controls.
 - **`src/hooks/usePrefersReducedMotion.ts`** — live `prefers-reduced-motion`
   media query state, threaded into SnippetCard (line-shake) and WinOverlay
   (confetti).
@@ -65,7 +69,11 @@ App mount
   per character, styled by judgement (pending/correct/typo/structural), plus
   an absolutely-positioned cursor overlay tweened via CSS `transform`
   (`cursorPositionAt` → `translate(col ch, row * 1.6em)`). A structural
-  mistake keys the affected line's `<div>` to replay a shake animation.
+  mistake keys the affected line's `<div>` to replay a shake animation. Also
+  renders an invisible `<input>` covering the card — on a touch-only device
+  there's no physical keyboard, so tapping the card focuses this input to
+  summon the OS on-screen one; `useKeyboardCapture` still does the actual
+  character routing via its `window` keydown listener.
 - **`StatRail`** — live WPM/accuracy/mistake counts, source repo attribution
   link, fallback notice, mute + new-snippet controls.
 - **`RulerBar`** — the ticked bar across the page top; fill width = typed
