@@ -118,6 +118,17 @@ describe("useTypingGame", () => {
     expect(result.current.typed).toBe("");
   });
 
+  it("is a no-op backspacing a completed run", () => {
+    const { result } = renderHook(() => useTypingGame("ab", { soundEngine: fakeSoundEngine() }));
+
+    act(() => result.current.typeChar("a"));
+    act(() => result.current.typeChar("b"));
+    act(() => result.current.backspace());
+
+    expect(result.current.typed).toBe("ab");
+    expect(result.current.isComplete).toBe(true);
+  });
+
   it("does not drop keystrokes fired synchronously before a re-render", () => {
     const { result } = renderHook(() => useTypingGame("abc", { soundEngine: fakeSoundEngine() }));
 
