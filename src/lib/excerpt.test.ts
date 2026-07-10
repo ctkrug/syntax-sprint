@@ -39,4 +39,11 @@ describe("extractExcerpt", () => {
     const excerpt = extractExcerpt(content, 10, 40);
     expect(excerpt).toBe(content);
   });
+
+  it("skips blank lines interleaved with the leading comment block", () => {
+    const header = "// license\n\n// still license\n\n";
+    const body = makeLines(20, "code");
+    const excerpt = extractExcerpt(`${header}${body}`, 10, 40);
+    expect(excerpt.startsWith("code0")).toBe(true);
+  });
 });
