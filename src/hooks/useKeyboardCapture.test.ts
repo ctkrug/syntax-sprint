@@ -31,6 +31,19 @@ describe("useKeyboardCapture", () => {
     expect(event.defaultPrevented).toBe(true);
   });
 
+  it("routes Tab to onChar as a literal tab character and prevents default", () => {
+    const onChar = vi.fn();
+    const onBackspace = vi.fn();
+    renderHook(() => useKeyboardCapture({ enabled: true, onChar, onBackspace }));
+
+    const event = new KeyboardEvent("keydown", { key: "Tab", bubbles: true, cancelable: true });
+    window.dispatchEvent(event);
+
+    expect(onChar).toHaveBeenCalledWith("\t");
+    expect(onBackspace).not.toHaveBeenCalled();
+    expect(event.defaultPrevented).toBe(true);
+  });
+
   it("ignores multi-character non-printable keys like Shift", () => {
     const onChar = vi.fn();
     renderHook(() => useKeyboardCapture({ enabled: true, onChar, onBackspace: vi.fn() }));
