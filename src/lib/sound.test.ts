@@ -132,4 +132,26 @@ describe("createSoundEngine with a real AudioContext", () => {
 
     expect(createdOscillators).toHaveLength(0);
   });
+
+  it("sweeps the structural-mistake tone's frequency down but never to zero", () => {
+    vi.stubGlobal("AudioContext", FakeAudioContext);
+    const engine = createSoundEngine(fakeStorage());
+
+    engine.playStructural();
+
+    expect(createdOscillators).toHaveLength(1);
+    expect(createdOscillators[0].frequency.exponentialRampToValueAtTime).toHaveBeenCalledWith(
+      80,
+      expect.any(Number),
+    );
+  });
+
+  it("does not sweep the correct-keystroke tone's frequency", () => {
+    vi.stubGlobal("AudioContext", FakeAudioContext);
+    const engine = createSoundEngine(fakeStorage());
+
+    engine.playCorrect();
+
+    expect(createdOscillators[0].frequency.exponentialRampToValueAtTime).not.toHaveBeenCalled();
+  });
 });
