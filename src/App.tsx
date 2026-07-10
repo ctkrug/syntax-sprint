@@ -35,12 +35,19 @@ export default function App() {
     setLoadError(false);
     getDailySnippet()
       .then((result) => {
+        // setLoading(false) lands in the same batch as setDaily (rather than
+        // a separate .finally() microtask) so the DOM never shows the loaded
+        // snippet for a render where keyboardEnabled is still held false —
+        // a window where real keystrokes fired right after load would drop.
         setDaily(result);
         setMistakeSeq(0);
         setStructuralMistakeRow(null);
+        setLoading(false);
       })
-      .catch(() => setLoadError(true))
-      .finally(() => setLoading(false));
+      .catch(() => {
+        setLoadError(true);
+        setLoading(false);
+      });
   }, []);
 
   useEffect(() => {

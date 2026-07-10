@@ -52,6 +52,23 @@ describe("App", () => {
     expect(screen.getByRole("button", { name: "Try again" })).toBeInTheDocument();
   });
 
+  it("enables keyboard capture in the same render the snippet appears in (no dropped-keystroke window)", async () => {
+    mockedGetDailySnippet.mockResolvedValue(snippetResult("ab"));
+    render(<App />);
+
+    await waitFor(() => expect(screen.getByRole("link", { name: "octocat/hello-world" })).toBeInTheDocument());
+
+    // If `loading` lagged `daily` by a render (a separate .then()/.finally()
+    // microtask), the New Snippet button would still read "Loading…" here
+    // even though the snippet is visible — and keyboardEnabled would be
+    // false, silently dropping any keystroke fired at this exact moment.
+    expect(screen.getByRole("button", { name: "New snippet" })).toBeInTheDocument();
+    expect(screen.queryByText("Loading…")).not.toBeInTheDocument();
+
+    typeString("a");
+    expect(screen.getByText("1 of 2 characters typed")).toBeInTheDocument();
+  });
+
   it("completes a run and shows the win overlay after typing the full snippet", async () => {
     mockedGetDailySnippet.mockResolvedValue(snippetResult("ab"));
     render(<App />);
