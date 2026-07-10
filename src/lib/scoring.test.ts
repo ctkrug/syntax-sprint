@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { scoreRun } from "./scoring";
+import { FALLBACK_SNIPPETS } from "./fallbackSnippets";
 
 describe("scoreRun", () => {
   it("reports full accuracy on a perfect match", () => {
@@ -24,5 +25,16 @@ describe("scoreRun", () => {
     const result = scoreRun("hello", "hallo");
     expect(result.typoMistakes).toBe(1);
     expect(result.structuralMistakes).toBe(0);
+  });
+
+  it("scores every bundled snippet's language without throwing", () => {
+    const languages = new Set(FALLBACK_SNIPPETS.map((s) => s.language));
+    expect(languages.size).toBeGreaterThanOrEqual(3);
+
+    for (const snippet of FALLBACK_SNIPPETS) {
+      expect(() => scoreRun(snippet.content, snippet.content)).not.toThrow();
+      const result = scoreRun(snippet.content, snippet.content);
+      expect(result.accuracy).toBe(1);
+    }
   });
 });
