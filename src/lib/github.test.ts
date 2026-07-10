@@ -145,4 +145,24 @@ describe("fetchRepoSnippet", () => {
       fetchRepoSnippet(REPO, fetchImpl as unknown as typeof fetch),
     ).rejects.toThrow("404");
   });
+
+  it("throws when the only code file found excerpts to empty content", async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValueOnce(
+        contentsResponse([
+          {
+            name: "index.ts",
+            path: "index.ts",
+            type: "file",
+            download_url: "https://raw/index.ts",
+          },
+        ]),
+      )
+      .mockResolvedValueOnce(rawResponse("   \n\n  \n"));
+
+    await expect(
+      fetchRepoSnippet(REPO, fetchImpl as unknown as typeof fetch),
+    ).rejects.toThrow("empty");
+  });
 });
