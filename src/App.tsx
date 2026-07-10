@@ -156,6 +156,7 @@ export default function App() {
           typoMistakes={typingGame.typoMistakes}
           reducedMotion={reducedMotion}
           onNext={loadSnippet}
+          nextLoading={loading}
         />
       )}
     </main>

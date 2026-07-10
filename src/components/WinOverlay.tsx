@@ -10,6 +10,8 @@ export interface WinOverlayProps {
   typoMistakes: number;
   reducedMotion: boolean;
   onNext: () => void;
+  /** True while the next snippet is already being fetched. */
+  nextLoading: boolean;
 }
 
 /**
@@ -24,6 +26,7 @@ export function WinOverlay({
   typoMistakes,
   reducedMotion,
   onNext,
+  nextLoading,
 }: WinOverlayProps) {
   const ctaRef = useRef<HTMLButtonElement>(null);
 
@@ -96,8 +99,9 @@ export function WinOverlay({
           type="button"
           className="control-button control-button-primary"
           onClick={onNext}
+          disabled={nextLoading}
         >
-          Next Snippet
+          {nextLoading ? "Loading…" : "Next Snippet"}
         </button>
       </div>
     </div>
