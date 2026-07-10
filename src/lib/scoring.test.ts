@@ -27,6 +27,18 @@ describe("scoreRun", () => {
     expect(result.structuralMistakes).toBe(0);
   });
 
+  it("ignores extra typed characters past the end of the target", () => {
+    const result = scoreRun("ab", "abcdef");
+    expect(result.judgements).toHaveLength(2);
+    expect(result.accuracy).toBe(1);
+  });
+
+  it("reports full accuracy for an empty target instead of dividing by zero", () => {
+    const result = scoreRun("", "");
+    expect(result.accuracy).toBe(1);
+    expect(result.judgements).toHaveLength(0);
+  });
+
   it("scores every bundled snippet's language without throwing", () => {
     const languages = new Set(FALLBACK_SNIPPETS.map((s) => s.language));
     expect(languages.size).toBeGreaterThanOrEqual(3);
