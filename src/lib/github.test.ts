@@ -37,6 +37,19 @@ describe("fetchTrendingRepos", () => {
     const fetchImpl = mockFetch([], false, 403);
     await expect(fetchTrendingRepos(10, fetchImpl)).rejects.toThrow("403");
   });
+
+  it("sends a bearer token when VITE_GITHUB_TOKEN is configured", async () => {
+    vi.stubEnv("VITE_GITHUB_TOKEN", "secret-token");
+    const fetchImpl = mockFetch([]);
+
+    await fetchTrendingRepos(10, fetchImpl);
+
+    const [, options] = (fetchImpl as ReturnType<typeof vi.fn>).mock.calls[0];
+    expect((options.headers as Record<string, string>).Authorization).toBe(
+      "Bearer secret-token",
+    );
+    vi.unstubAllEnvs();
+  });
 });
 
 const REPO: TrendingRepo = {
