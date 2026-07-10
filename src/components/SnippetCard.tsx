@@ -12,15 +12,21 @@ export interface SnippetCardProps {
   reducedMotion: boolean;
 }
 
-function charClass(index: number, typedLength: number, activeIndex: number, judgement?: CharJudgement): string {
+// `activeIndex` is where the next character goes, i.e. the number of chars
+// already typed, so any index at or past it is still pending.
+function charClass(index: number, activeIndex: number, judgement?: CharJudgement): string {
   if (index === activeIndex) return "snippet-char snippet-char-active";
-  if (index >= typedLength || !judgement) return "snippet-char snippet-char-pending";
+  if (index > activeIndex || !judgement) return "snippet-char snippet-char-pending";
   if (judgement.correct) return "snippet-char snippet-char-correct";
   return judgement.mistakeKind === "structural"
     ? "snippet-char snippet-char-mistake-structural"
     : "snippet-char snippet-char-mistake-typo";
 }
 
+// Render a space as a non-breaking space (U+00A0) so each per-character
+// <span> keeps a stable, visible width for its highlight / mistake
+// background — a plain space can collapse to a zero-width cell when it is
+// the active or errored character. Not a no-op despite how it reads.
 function displayChar(char: string): string {
   return char === " " ? " " : char;
 }
@@ -63,7 +69,7 @@ export function SnippetCard({
               {line.split("").map((char, colIndex) => {
                 const index = lineStart + colIndex;
                 return (
-                  <span key={index} className={charClass(index, typed.length, activeIndex, judgements[index])}>
+                  <span key={index} className={charClass(index, activeIndex, judgements[index])}>
                     {displayChar(char)}
                   </span>
                 );
