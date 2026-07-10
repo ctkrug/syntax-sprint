@@ -10,6 +10,7 @@ function baseProps() {
     typoMistakes: 3,
     reducedMotion: false,
     onNext: vi.fn(),
+    nextLoading: false,
   };
 }
 
@@ -62,5 +63,20 @@ describe("WinOverlay", () => {
 
     expect(event.defaultPrevented).toBe(true);
     expect(cta).toHaveFocus();
+  });
+
+  it("disables the CTA while the next snippet is loading, ignoring rapid re-clicks", () => {
+    const props = baseProps();
+    const { rerender } = render(<WinOverlay {...props} />);
+
+    const cta = screen.getByRole("button", { name: "Next Snippet" });
+    cta.click();
+    rerender(<WinOverlay {...props} nextLoading={true} />);
+
+    // A trapped-focus CTA is an easy target for a reflexive second Enter/click
+    // while the next fetch is already in flight — it must not fire again.
+    screen.getByRole("button").click();
+
+    expect(props.onNext).toHaveBeenCalledTimes(1);
   });
 });
