@@ -38,30 +38,30 @@ the wow moment: it must be reachable before anything else gets built.
 
 ## Epic 2 — Live Trending Content & Sourcing
 
-- [ ] **6. GitHub search integration returns real, syntax-valid snippets**
+- [x] **6. GitHub search integration returns real, syntax-valid snippets**
   - `fetchTrendingRepos` returns at least one repo with a non-empty
     `language` field across repeated live calls.
   - A snippet-extraction step pulls a bounded-length excerpt (roughly
     10–40 lines) from an actual file in the chosen repo, not the whole file.
 
-- [ ] **7. Multi-language snippet support**
+- [x] **7. Multi-language snippet support**
   - Snippets in at least 3 different languages (e.g. TypeScript, Python, Go)
     tokenize and score without the tokenizer throwing.
   - The UI displays which language the current snippet is written in.
 
-- [ ] **8. Rate-limit and error resilience**
+- [x] **8. Rate-limit and error resilience**
   - A 403/rate-limited GitHub response falls back to the bundled snippet set
     and shows a small inline notice, rather than crashing or going blank.
   - When `VITE_GITHUB_TOKEN` (see `.env.example`) is set, it's sent with the
     request to raise the rate limit.
 
-- [ ] **9. "New snippet" refresh control**
+- [x] **9. "New snippet" refresh control**
   - A visible control lets the player fetch a different trending snippet
     without reloading the page.
   - Rapid repeated clicks are debounced/disabled while a fetch is in
     flight — no overlapping requests.
 
-- [ ] **10. Design polish — source attribution treatment**
+- [x] **10. Design polish — source attribution treatment**
   - The source repo name/link is styled per `docs/DESIGN.md` (not raw
     unstyled text) and opens the repo in a new tab.
 
