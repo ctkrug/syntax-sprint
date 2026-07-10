@@ -149,11 +149,16 @@ export async function fetchRepoSnippet(
     throw new Error(`GitHub raw content failed with status ${rawResponse.status}`);
   }
   const rawContent = await rawResponse.text();
+  const content = extractExcerpt(rawContent);
+
+  if (content.length === 0) {
+    throw new Error(`${file.path} in ${repo.fullName} excerpted to empty content`);
+  }
 
   return {
     repo: repo.fullName,
     language: repo.language ?? "text",
     path: file.path,
-    content: extractExcerpt(rawContent),
+    content,
   };
 }
