@@ -396,3 +396,100 @@ a:focus-visible {
   outline: 3px solid var(--color-accent-support);
   outline-offset: 2px;
 }
+
+.win-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(25, 25, 25, 0.55);
+  padding: var(--space-4);
+  z-index: 10;
+}
+
+.win-card {
+  position: relative;
+  width: min(420px, 100%);
+  background: var(--color-surface-raised);
+  border: 2px solid var(--color-text);
+  border-radius: var(--radius);
+  box-shadow: 4px 4px 0 var(--color-text);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  animation: win-card-in var(--motion-ui);
+}
+
+.win-stamp {
+  align-self: flex-start;
+  margin: 0;
+  padding: var(--space-1) var(--space-2);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  color: var(--color-accent);
+  border: 3px solid var(--color-accent);
+  border-radius: var(--radius);
+  transform: rotate(-4deg);
+}
+
+.win-stats {
+  margin: 0;
+}
+
+.confetti-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -5%;
+  width: 8px;
+  height: 14px;
+  animation: confetti-fall 1400ms ease-in forwards;
+}
+
+.confetti-accent {
+  background: var(--color-accent);
+}
+
+.confetti-support {
+  background: var(--color-accent-support);
+}
+
+@keyframes confetti-fall {
+  from {
+    top: -5%;
+    opacity: 1;
+  }
+  to {
+    top: 105%;
+    opacity: 0.4;
+  }
+}
+
+@keyframes win-card-in {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.status-message {
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+}
+
+.status-message-error {
+  color: var(--color-danger);
+}
