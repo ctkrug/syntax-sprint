@@ -6,31 +6,31 @@ the wow moment: it must be reachable before anything else gets built.
 
 ## Epic 1 — Core Sprint Loop
 
-- [ ] **1. Load today's #1 trending repo and type it live** *(wow moment)*
+- [x] **1. Load today's #1 trending repo and type it live** *(wow moment)*
   - On page load, the app fetches the top trending repo via
     `fetchTrendingRepos` and displays a real snippet pulled from it (not a
     hardcoded placeholder), with the source repo name shown on screen.
   - If the GitHub API fails or rate-limits, a bundled fallback snippet loads
     instead of a blank or broken page.
 
-- [ ] **2. Real-time keystroke scoring with instant structural-mistake flash**
+- [x] **2. Real-time keystroke scoring with instant structural-mistake flash**
   - Typing a wrong ordinary character highlights it distinctly from typing a
     wrong bracket/indent character — two visually different states.
   - A structural mistake (bad bracket or broken indent) flashes red within
     one animation frame of the keystroke, not only at run end.
 
-- [ ] **3. Live cursor/highlight tween across the snippet**
+- [x] **3. Live cursor/highlight tween across the snippet**
   - The active-character highlight animates between characters as the
     player types (tweened, not an instant jump).
   - Backspace moves the highlight back one position and clears the
     previously recorded judgement for that character.
 
-- [ ] **4. Snippet completion detection & run summary**
+- [x] **4. Snippet completion detection & run summary**
   - Typing the snippet's final character ends the run and displays WPM and
     accuracy.
   - The summary reports structural mistakes and typos as separate counts.
 
-- [ ] **5. Design polish — Swiss-grid modernist sprint shell**
+- [x] **5. Design polish — Swiss-grid modernist sprint shell**
   - The snippet card and stat rail use `docs/DESIGN.md` tokens (paper
     background, offset shadow, Space Grotesk/IBM Plex Mono pairing) and the
     snippet card fills ≥60vh on desktop.
