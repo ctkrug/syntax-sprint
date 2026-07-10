@@ -73,6 +73,7 @@ export default function App() {
   const keyboardEnabled = daily !== null && !typingGame.isComplete && !loading;
   useKeyboardCapture({
     enabled: keyboardEnabled,
+    interceptTab: target[typingGame.typed.length] === "\t",
     onChar: typingGame.typeChar,
     onBackspace: typingGame.backspace,
   });

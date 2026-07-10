@@ -63,6 +63,36 @@ describe("App", () => {
     await waitFor(() => expect(screen.getByRole("dialog", { name: "Run complete" })).toBeInTheDocument());
   });
 
+  it("does not intercept Tab (leaves it free for focus navigation) when no tab is expected next", async () => {
+    mockedGetDailySnippet.mockResolvedValue(snippetResult("ab"));
+    render(<App />);
+
+    await waitFor(() => expect(screen.getByRole("link", { name: "octocat/hello-world" })).toBeInTheDocument());
+
+    const event = new KeyboardEvent("keydown", { key: "Tab", bubbles: true, cancelable: true });
+    act(() => {
+      window.dispatchEvent(event);
+    });
+
+    expect(event.defaultPrevented).toBe(false);
+    expect(screen.getByText("0 of 2 characters typed")).toBeInTheDocument();
+  });
+
+  it("types a literal tab character when the snippet's next character is a tab", async () => {
+    mockedGetDailySnippet.mockResolvedValue(snippetResult("\tx"));
+    render(<App />);
+
+    await waitFor(() => expect(screen.getByRole("link", { name: "octocat/hello-world" })).toBeInTheDocument());
+
+    const event = new KeyboardEvent("keydown", { key: "Tab", bubbles: true, cancelable: true });
+    act(() => {
+      window.dispatchEvent(event);
+    });
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(screen.getByText("1 of 2 characters typed")).toBeInTheDocument();
+  });
+
   it("fetches a new snippet when New Snippet is clicked", async () => {
     mockedGetDailySnippet.mockResolvedValue(snippetResult("ab"));
     render(<App />);
