@@ -146,6 +146,26 @@ describe("fetchRepoSnippet", () => {
     ).rejects.toThrow("404");
   });
 
+  it("throws when the raw file download fails after being listed", async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValueOnce(
+        contentsResponse([
+          {
+            name: "index.ts",
+            path: "index.ts",
+            type: "file",
+            download_url: "https://raw/index.ts",
+          },
+        ]),
+      )
+      .mockResolvedValueOnce({ ok: false, status: 404 });
+
+    await expect(
+      fetchRepoSnippet(REPO, fetchImpl as unknown as typeof fetch),
+    ).rejects.toThrow("404");
+  });
+
   it("throws when the only code file found excerpts to empty content", async () => {
     const fetchImpl = vi
       .fn()
