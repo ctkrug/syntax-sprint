@@ -30,4 +30,23 @@ describe("tokenize", () => {
     const tokens = tokenize("a\nb");
     expect(tokens.map((t) => t.kind)).toEqual(["word", "newline", "word"]);
   });
+
+  it("returns no tokens for an empty source", () => {
+    expect(tokenize("")).toEqual([]);
+  });
+
+  it("does not hang or throw on an unterminated string literal", () => {
+    const tokens = tokenize('const s = "never closes');
+    const strings = tokens.filter((t) => t.kind === "string");
+    expect(strings).toHaveLength(1);
+    expect(strings[0].text).toBe('"never closes');
+  });
+
+  it("does not hang or throw on an unterminated line comment", () => {
+    expect(() => tokenize("x = 1 //")).not.toThrow();
+  });
+
+  it("tokenizes emoji and other multi-byte characters without throwing", () => {
+    expect(() => tokenize('const msg = "hi 🎉 世界";')).not.toThrow();
+  });
 });
