@@ -18,7 +18,17 @@ function snippetResult(content: string, overrides: Partial<Snippet> = {}) {
   };
 }
 
-function typeString(text: string) {
+// The snippet load resolves outside act() (during waitFor polling), so the
+// passive effect that attaches useKeyboardCapture's window listener may still
+// be pending when the DOM already shows the loaded snippet. Flush effects
+// before dispatching keys so the listener is guaranteed attached — otherwise
+// the first keystrokes race the effect and are silently dropped.
+async function flushEffects() {
+  await act(async () => {});
+}
+
+async function typeString(text: string) {
+  await flushEffects();
   for (const char of text) {
     act(() => {
       window.dispatchEvent(new KeyboardEvent("keydown", { key: char, bubbles: true }));
@@ -65,7 +75,7 @@ describe("App", () => {
     expect(screen.getByRole("button", { name: "New snippet" })).toBeInTheDocument();
     expect(screen.queryByText("Loading…")).not.toBeInTheDocument();
 
-    typeString("a");
+    await typeString("a");
     expect(screen.getByText("1 of 2 characters typed")).toBeInTheDocument();
   });
 
@@ -75,7 +85,7 @@ describe("App", () => {
 
     await waitFor(() => expect(screen.getByRole("link", { name: "octocat/hello-world" })).toBeInTheDocument());
 
-    typeString("ab");
+    await typeString("ab");
 
     await waitFor(() => expect(screen.getByRole("dialog", { name: "Run complete" })).toBeInTheDocument());
   });
@@ -85,6 +95,7 @@ describe("App", () => {
     render(<App />);
 
     await waitFor(() => expect(screen.getByRole("link", { name: "octocat/hello-world" })).toBeInTheDocument());
+    await flushEffects();
 
     const event = new KeyboardEvent("keydown", { key: "Tab", bubbles: true, cancelable: true });
     act(() => {
@@ -100,6 +111,7 @@ describe("App", () => {
     render(<App />);
 
     await waitFor(() => expect(screen.getByRole("link", { name: "octocat/hello-world" })).toBeInTheDocument());
+    await flushEffects();
 
     const event = new KeyboardEvent("keydown", { key: "Tab", bubbles: true, cancelable: true });
     act(() => {
