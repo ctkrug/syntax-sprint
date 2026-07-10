@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 const CONFETTI_COUNT = 24;
 const CONFETTI_COLORS = ["confetti-accent", "confetti-support"];
 
@@ -23,8 +25,30 @@ export function WinOverlay({
   reducedMotion,
   onNext,
 }: WinOverlayProps) {
+  const ctaRef = useRef<HTMLButtonElement>(null);
+
+  // Standard modal behavior: move focus into the dialog on open, and trap it
+  // there — the underlying stat rail's controls stay in the DOM (just
+  // visually covered), so without this a keyboard user could Tab straight
+  // into a "New snippet"/mute button they can't see.
+  useEffect(() => {
+    ctaRef.current?.focus();
+  }, []);
+
+  function trapFocus(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key !== "Tab") return;
+    event.preventDefault();
+    ctaRef.current?.focus();
+  }
+
   return (
-    <div className="win-overlay" role="dialog" aria-modal="true" aria-label="Run complete">
+    <div
+      className="win-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Run complete"
+      onKeyDown={trapFocus}
+    >
       {!reducedMotion && (
         <div className="confetti-field" aria-hidden="true">
           {Array.from({ length: CONFETTI_COUNT }, (_, i) => {
@@ -67,7 +91,12 @@ export function WinOverlay({
             <dd>{typoMistakes}</dd>
           </div>
         </dl>
-        <button type="button" className="control-button control-button-primary" onClick={onNext}>
+        <button
+          ref={ctaRef}
+          type="button"
+          className="control-button control-button-primary"
+          onClick={onNext}
+        >
           Next Snippet
         </button>
       </div>

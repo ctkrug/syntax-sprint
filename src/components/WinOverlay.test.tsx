@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { WinOverlay } from "./WinOverlay";
 
@@ -45,5 +45,22 @@ describe("WinOverlay", () => {
     render(<WinOverlay {...props} />);
     screen.getByRole("button", { name: "Next Snippet" }).click();
     expect(props.onNext).toHaveBeenCalledTimes(1);
+  });
+
+  it("moves focus to the Next Snippet CTA on mount", () => {
+    render(<WinOverlay {...baseProps()} />);
+    expect(screen.getByRole("button", { name: "Next Snippet" })).toHaveFocus();
+  });
+
+  it("traps Tab within the dialog instead of letting focus escape", () => {
+    render(<WinOverlay {...baseProps()} />);
+    const dialog = screen.getByRole("dialog", { name: "Run complete" });
+    const cta = screen.getByRole("button", { name: "Next Snippet" });
+
+    const event = new KeyboardEvent("keydown", { key: "Tab", bubbles: true, cancelable: true });
+    fireEvent(dialog, event);
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(cta).toHaveFocus();
   });
 });
