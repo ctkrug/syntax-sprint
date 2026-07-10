@@ -23,21 +23,29 @@ GitHub repo** — not a canned corpus. Start typing: fumble a bracket or blow an
 indentation level and the character flashes red the instant you type it,
 because the scorer is tracking real syntax structure, not just string diffing.
 
-## Planned features
+## Features
 
-- **Live trending content** — snippets sourced from the GitHub REST API's
-  trending/most-starred signal, refreshed continuously so the game never goes
-  stale.
+- **Live trending content** — today's snippet comes from the GitHub search
+  API's most-starred-recently-created signal (the closest proxy to
+  "trending" GitHub's API exposes), with a bundled offline fallback if the
+  API is unreachable or rate-limited.
 - **Syntax-aware scoring** — a real tokenizer walks each snippet (brackets,
   indentation, strings, comments) so structural mistakes are scored
-  differently from simple typos.
-- **Bracket & indentation penalties** — instant visual feedback the moment a
-  bracket is mismatched or an indent level is broken, not just at the end of
-  the run.
-- **WPM & accuracy stats** — per-run words-per-minute, accuracy, and a
-  breakdown of error types (typo vs. structural).
-- **Language-aware snippets** — pulled across multiple languages so the game
-  reflects the actual diversity of trending repos, not just one ecosystem.
+  differently from simple typos, live as you type.
+- **Bracket & indentation penalties** — a mismatched bracket or broken indent
+  flashes red and shakes its line the instant you type it, not just at the
+  end of the run.
+- **WPM & accuracy stats** — a live stat rail (updating at least once a
+  second) plus a run-complete summary with a typo/structural breakdown.
+- **Multi-language snippets** — the tokenizer is structural, not
+  grammar-specific, so TypeScript, Python, Go, Rust, and friends all score
+  correctly; the UI shows which language the current snippet is in.
+- **Synthesized sound + reduced motion** — WebAudio SFX (no audio files) with
+  a persisted mute toggle, and `prefers-reduced-motion` support that drops
+  shake/confetti while keeping color and text feedback.
+
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for how the pieces fit
+together.
 
 ## Stack
 
