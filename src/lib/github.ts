@@ -20,6 +20,19 @@ interface GitHubContentEntry {
 }
 
 /**
+ * Sends the GitHub REST accept header plus, when `VITE_GITHUB_TOKEN` is
+ * configured, a bearer token that raises the unauthenticated rate limit.
+ */
+function githubHeaders(): HeadersInit {
+  const headers: Record<string, string> = { Accept: "application/vnd.github+json" };
+  const token = import.meta.env.VITE_GITHUB_TOKEN;
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  return headers;
+}
+
+/**
  * Finds today's most-starred repos via the GitHub search API as a proxy for
  * "trending" (the public trending page has no official API). Sorted by
  * stars among repos created recently enough to reflect current momentum
@@ -37,7 +50,7 @@ export async function fetchTrendingRepos(
   )}&sort=stars&order=desc&per_page=${limit}`;
 
   const response = await fetchImpl(url, {
-    headers: { Accept: "application/vnd.github+json" },
+    headers: githubHeaders(),
   });
 
   if (!response.ok) {
@@ -95,7 +108,7 @@ async function fetchContents(
 ): Promise<GitHubContentEntry[]> {
   const url = `https://api.github.com/repos/${fullName}/contents/${path}`;
   const response = await fetchImpl(url, {
-    headers: { Accept: "application/vnd.github+json" },
+    headers: githubHeaders(),
   });
   if (!response.ok) {
     throw new Error(`GitHub contents failed with status ${response.status}`);
