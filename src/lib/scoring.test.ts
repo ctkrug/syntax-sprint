@@ -16,7 +16,7 @@ describe("scoreRun", () => {
   });
 
   it("classifies a mismatched indent character as structural", () => {
-    const result = scoreRun("  return 1", "\treturn 1");
+    const result = scoreRun(" return 1", "\treturn 1");
     expect(result.structuralMistakes).toBe(1);
   });
 
