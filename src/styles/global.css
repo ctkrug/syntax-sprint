@@ -1,0 +1,75 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+
+:root {
+  /* Swiss-grid modernist tokens — see docs/DESIGN.md */
+  --color-bg: #f4f1ea;
+  --color-surface: #eae5d9;
+  --color-surface-raised: #ffffff;
+  --color-text: #191919;
+  --color-text-muted: #5c5850;
+  --color-accent: #d7263d;
+  --color-accent-support: #1d3461;
+  --color-success: #2e7d32;
+  --color-danger: #b00020;
+
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+
+  --radius: 2px;
+  --motion-ui: 180ms ease-out;
+  --motion-game: 90ms ease-out;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-6);
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.tagline {
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  margin: 0;
+}
