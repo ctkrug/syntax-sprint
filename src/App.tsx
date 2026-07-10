@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { PageInfo } from "./components/PageInfo";
 import { RulerBar } from "./components/RulerBar";
 import { SnippetCard } from "./components/SnippetCard";
 import { StatRail } from "./components/StatRail";
@@ -65,7 +66,11 @@ export default function App() {
     previousTypedLength.current = typingGame.typed.length;
 
     const lastJudgement = typingGame.judgements[typingGame.judgements.length - 1];
-    if (lastJudgement && !lastJudgement.correct && lastJudgement.mistakeKind === "structural") {
+    if (
+      lastJudgement &&
+      !lastJudgement.correct &&
+      lastJudgement.mistakeKind === "structural"
+    ) {
       const row = cursorPositionAt(target, typingGame.typed.length - 1).row;
       setStructuralMistakeRow(row);
       setMistakeSeq((seq) => seq + 1);
@@ -92,73 +97,86 @@ export default function App() {
 
   if (loadError) {
     return (
-      <main className="app-shell app-shell-status">
-        <Wordmark />
-        <p className="status-message status-message-error" role="alert">
-          Couldn&apos;t load a snippet right now.
-        </p>
-        <button type="button" className="control-button control-button-primary" onClick={loadSnippet}>
-          Try again
-        </button>
-      </main>
+      <>
+        <main className="app-shell app-shell-status">
+          <Wordmark />
+          <p className="status-message status-message-error" role="alert">
+            Couldn&apos;t load a snippet right now.
+          </p>
+          <button
+            type="button"
+            className="control-button control-button-primary"
+            onClick={loadSnippet}
+          >
+            Try again
+          </button>
+        </main>
+        <PageInfo />
+      </>
     );
   }
 
   if (!daily) {
     return (
-      <main className="app-shell app-shell-status">
-        <Wordmark />
-        <p className="status-message" role="status">
-          Fetching today&apos;s trending snippet…
-        </p>
-      </main>
+      <>
+        <main className="app-shell app-shell-status">
+          <Wordmark />
+          <p className="status-message" role="status">
+            Fetching today&apos;s trending snippet…
+          </p>
+        </main>
+        <PageInfo />
+      </>
     );
   }
 
   return (
-    <main className="app-shell">
-      <RulerBar progress={progress} wpm={typingGame.wpm} />
-      <header className="app-header">
-        <Wordmark />
-        <p className="tagline">
-          Type today&apos;s trending code. Fumble a bracket, see it flash red.
-        </p>
-      </header>
-      <div className="game-layout">
-        <SnippetCard
-          target={target}
-          typed={typingGame.typed}
-          judgements={typingGame.judgements}
-          structuralMistakeRow={structuralMistakeRow}
-          mistakeSeq={mistakeSeq}
-          reducedMotion={reducedMotion}
-        />
-        <StatRail
-          wpm={typingGame.wpm}
-          accuracy={typingGame.accuracy}
-          structuralMistakes={typingGame.structuralMistakes}
-          typoMistakes={typingGame.typoMistakes}
-          language={daily.snippet.language}
-          repoFullName={daily.snippet.repo}
-          repoUrl={repoUrlFor(daily)}
-          notice={daily.notice}
-          muted={muted}
-          onToggleMute={toggleMute}
-          onNewSnippet={loadSnippet}
-          newSnippetLoading={loading}
-        />
-      </div>
-      {typingGame.isComplete && (
-        <WinOverlay
-          wpm={typingGame.wpm}
-          accuracy={typingGame.accuracy}
-          structuralMistakes={typingGame.structuralMistakes}
-          typoMistakes={typingGame.typoMistakes}
-          reducedMotion={reducedMotion}
-          onNext={loadSnippet}
-          nextLoading={loading}
-        />
-      )}
-    </main>
+    <>
+      <main className="app-shell">
+        <RulerBar progress={progress} wpm={typingGame.wpm} />
+        <header className="app-header">
+          <Wordmark />
+          <p className="tagline">
+            Type today&apos;s trending code. Fumble a bracket, see it flash red.
+          </p>
+        </header>
+        <div className="game-layout">
+          <SnippetCard
+            target={target}
+            typed={typingGame.typed}
+            judgements={typingGame.judgements}
+            structuralMistakeRow={structuralMistakeRow}
+            mistakeSeq={mistakeSeq}
+            reducedMotion={reducedMotion}
+          />
+          <StatRail
+            wpm={typingGame.wpm}
+            accuracy={typingGame.accuracy}
+            structuralMistakes={typingGame.structuralMistakes}
+            typoMistakes={typingGame.typoMistakes}
+            language={daily.snippet.language}
+            repoFullName={daily.snippet.repo}
+            repoUrl={repoUrlFor(daily)}
+            notice={daily.notice}
+            muted={muted}
+            onToggleMute={toggleMute}
+            onNewSnippet={loadSnippet}
+            newSnippetLoading={loading}
+          />
+        </div>
+        {typingGame.isComplete && (
+          <WinOverlay
+            wpm={typingGame.wpm}
+            accuracy={typingGame.accuracy}
+            structuralMistakes={typingGame.structuralMistakes}
+            typoMistakes={typingGame.typoMistakes}
+            reducedMotion={reducedMotion}
+            onNext={loadSnippet}
+            nextLoading={loading}
+          />
+        )}
+      </main>
+      <PageInfo />
+    </>
   );
 }
