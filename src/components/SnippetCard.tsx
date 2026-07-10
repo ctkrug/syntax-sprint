@@ -78,6 +78,24 @@ export function SnippetCard({
           transform: `translate(${cursor.col}ch, ${cursor.row * 1.6}em)`,
         }}
       />
+      {/*
+        Invisible tap target covering the card: on a touch-only device there's
+        no physical keyboard, so nothing summons the on-screen one unless some
+        element is focused. useKeyboardCapture already listens on `window` and
+        needs no focus itself, so this input's only job is to be tappable.
+      */}
+      <input
+        className="snippet-mobile-input"
+        type="text"
+        aria-hidden="true"
+        tabIndex={-1}
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck={false}
+        inputMode="text"
+        enterKeyHint="done"
+      />
       <p className="visually-hidden" role="status" aria-live="polite">
         {typed.length} of {target.length} characters typed
       </p>

@@ -68,4 +68,12 @@ describe("SnippetCard", () => {
     renderCard("if");
     expect(screen.getByRole("status")).toHaveTextContent(`2 of ${TARGET.length} characters typed`);
   });
+
+  it("renders a tappable input covering the card to summon a mobile keyboard", () => {
+    const { container } = renderCard("");
+    const input = container.querySelector(".snippet-mobile-input");
+    expect(input).not.toBeNull();
+    expect(input?.tagName).toBe("INPUT");
+    expect(input).toHaveAttribute("autoCorrect", "off");
+  });
 });

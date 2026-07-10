@@ -264,6 +264,17 @@ body {
   transition: transform var(--motion-game);
 }
 
+.snippet-mobile-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: text;
+}
+
 @keyframes line-shake {
   0%,
   100% {
