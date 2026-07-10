@@ -67,26 +67,26 @@ the wow moment: it must be reachable before anything else gets built.
 
 ## Epic 3 — Stats, Feel & Ship Polish
 
-- [ ] **11. Live WPM/accuracy stat panel**
+- [x] **11. Live WPM/accuracy stat panel**
   - WPM and accuracy values update at least once per second while typing,
     not only at run end.
   - Both are computed from actual elapsed time and correct-character count
     using a documented formula, not placeholder numbers.
 
-- [ ] **12. Win celebration overlay**
+- [x] **12. Win celebration overlay**
   - Completing a run shows the stamped "RUN COMPLETE" overlay with run
     stats and a confetti burst, per `docs/DESIGN.md`.
   - The overlay has exactly one primary CTA ("Next Snippet") that starts a
     new run.
 
-- [ ] **13. Synthesized WebAudio SFX with persisted mute**
+- [x] **13. Synthesized WebAudio SFX with persisted mute**
   - Correct-keystroke, typo, structural-mistake, and win events each play a
     distinct synthesized tone (oscillators/noise, no audio files) per
     `docs/DESIGN.md`'s SFX list.
   - A mute toggle silences all SFX and its state persists across a page
     reload via `localStorage`.
 
-- [ ] **14. Accessibility & reduced motion**
+- [x] **14. Accessibility & reduced motion**
   - `prefers-reduced-motion` disables line-shake and confetti while keeping
     color flashes and text feedback.
   - The mute button and next-snippet control have `aria-label`s and are
