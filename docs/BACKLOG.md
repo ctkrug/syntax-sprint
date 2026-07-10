@@ -92,7 +92,7 @@ the wow moment: it must be reachable before anything else gets built.
   - The mute button and next-snippet control have `aria-label`s and are
     reachable via keyboard tab order.
 
-- [ ] **15. Design self-review pass at 390 / 768 / 1440**
+- [x] **15. Design self-review pass at 390 / 768 / 1440**
   - Manual check at all three widths confirms no overlap, no horizontal
     scroll, and no unstyled native controls remain.
   - Findings and fixes are noted in the QA run's STATUS `memory` field per
