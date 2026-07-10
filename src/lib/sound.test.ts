@@ -79,6 +79,11 @@ describe("createSoundEngine mute state", () => {
     expect(createSoundEngine(storage).isMuted()).toBe(true);
   });
 
+  it("treats a hand-edited/corrupt storage value as unmuted", () => {
+    const storage = fakeStorage({ "syntax-sprint:muted": "true" });
+    expect(createSoundEngine(storage).isMuted()).toBe(false);
+  });
+
   it("persists setMuted to storage", () => {
     const storage = fakeStorage();
     const engine = createSoundEngine(storage);
