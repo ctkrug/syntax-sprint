@@ -99,6 +99,18 @@ describe("createSoundEngine mute state", () => {
   });
 });
 
+describe("createSoundEngine on Safari (webkitAudioContext only)", () => {
+  it("falls back to webkitAudioContext when window.AudioContext is absent", () => {
+    vi.stubGlobal("AudioContext", undefined);
+    vi.stubGlobal("webkitAudioContext", FakeAudioContext);
+    const engine = createSoundEngine(fakeStorage());
+
+    engine.playCorrect();
+
+    expect(createdOscillators).toHaveLength(1);
+  });
+});
+
 describe("createSoundEngine with a real AudioContext", () => {
   it("creates one oscillator per tone and starts it", () => {
     vi.stubGlobal("AudioContext", FakeAudioContext);
